@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+/*
+  Design tokens. Tailwind v4 reads these from @theme, so `bg-paper`, `text-ink`,
+  `border-line`, `text-brand` etc. become real utilities.
+
+  The look: a white page, near-black ink, generous whitespace, one violet→blue
+  gradient reserved for primary actions, and soft lavender for drop zones.
+*/
+@theme {
+  --color-paper: #ffffff;
+  --color-surface: #ffffff;
+  --color-muted: #f7f8fa; /* section backgrounds, table headers */
+  --color-ink: #0f1222;
+  --color-ink-muted: #5b6170;
+  --color-ink-faint: #9aa0ac;
+  --color-line: #eceef2;
+  --color-line-strong: #dde0e7;
+
+  --color-brand: #6d4aff; /* links, focus rings, citation markers */
+  --color-brand-from: #a259ff;
+  --color-brand-to: #2f6bff;
+  --color-brand-soft: #f3efff;
+  --color-brand-line: #d9c4ff; /* dashed drop-zone border */
+
+  /* Kept for compatibility with existing class names. */
+  --color-accent: #6d4aff;
+  --color-accent-strong: #5532e6;
+  --color-accent-soft: #f3efff;
+
+  --color-ok: #15803d;
+  --color-ok-soft: #ecfdf3;
+  --color-warn: #b45309;
+  --color-warn-soft: #fff8eb;
+  --color-bad: #dc2626;
+  --color-bad-soft: #fef2f2;
+  --color-info: #2563eb;
+  --color-info-soft: #eff4ff;
+
+  --font-sans:
+    "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  --shadow-card: 0 1px 2px rgb(15 18 34 / 0.04);
+  --shadow-soft: 0 1px 2px rgb(15 18 34 / 0.04), 0 12px 32px -12px rgb(15 18 34 / 0.12);
+  --shadow-float: 0 1px 2px rgb(15 18 34 / 0.04), 0 18px 48px -18px rgb(15 18 34 / 0.18);
+  --shadow-brand: 0 8px 20px -8px rgb(79 70 229 / 0.55);
+}
+
+/* The one gradient. Used for primary buttons, the logo mark and step numbers. */
+@utility bg-brand-gradient {
+  background-image: linear-gradient(90deg, var(--color-brand-from), var(--color-brand-to));
+}
+
+@utility text-brand-gradient {
+  background-image: linear-gradient(90deg, var(--color-brand-from), var(--color-brand-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem; /* anchor links land below the floating nav */
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss03";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--color-brand-soft);
+  color: var(--color-ink);
+}
+
+/* Citation markers like [2] inside answer text. */
+.cite-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  margin-left: 0.2rem;
+  padding: 0 0.3rem;
+  border-radius: 9999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  vertical-align: 0.15em;
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
+/* Thin, quiet scrollbars for long passages. */
+.quiet-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-strong) transparent;
+}

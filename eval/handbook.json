@@ -1,0 +1,100 @@
+{
+  "name": "Aurora housing handbook (golden set)",
+  "documents": ["../prisma/seed-data/aurora-housing-handbook.md"],
+  "questions": [
+    {
+      "q": "What are the quiet hours on weekdays?",
+      "evidence": ["11 pm to 7 am on weekdays"],
+      "answer": ["11 pm"]
+    },
+    {
+      "q": "How long can a guest stay overnight?",
+      "evidence": ["three consecutive nights"],
+      "answer": ["three"]
+    },
+    {
+      "q": "Are pets allowed in the residence halls?",
+      "evidence": ["No pets are permitted"],
+      "answer": ["No pets", "aquarium"]
+    },
+    {
+      "q": "How do I report a maintenance problem?",
+      "evidence": ["Report a problem"],
+      "answer": ["portal"]
+    },
+    {
+      "q": "When is the deposit refunded after moving out?",
+      "evidence": ["refunded within 30 days"],
+      "answer": ["30 days"]
+    },
+    {
+      "q": "How much does a replacement key card cost?",
+      "evidence": ["a replacement costs £15"],
+      "answer": ["£15"]
+    },
+    {
+      "q": "When are the fire alarms tested?",
+      "evidence": ["10 am every Wednesday"],
+      "answer": ["Wednesday"]
+    },
+    {
+      "q": "Can I use my own wireless router?",
+      "evidence": ["Personal routers and range extenders are not permitted"],
+      "answer": ["not permitted"]
+    },
+    {
+      "q": "By what time must I vacate my room at the end of the contract?",
+      "evidence": ["by 10 am on the last day"],
+      "answer": ["10 am"]
+    },
+    {
+      "q": "How much is the late payment fee?",
+      "evidence": ["late payment fee of £25"],
+      "answer": ["£25"]
+    },
+    {
+      "q": "How much does a wash cost in the laundry?",
+      "evidence": ["a wash costs £3.20"],
+      "answer": ["£3.20"]
+    },
+    {
+      "q": "When are the shared kitchens deep-cleaned?",
+      "evidence": ["every Tuesday morning"],
+      "answer": ["Tuesday"]
+    },
+    {
+      "q": "Who do I contact about a problem with another resident?",
+      "evidence": ["Resident Assistant"],
+      "answer": ["Resident Assistant"]
+    },
+    {
+      "q": "How long do I have to collect a parcel?",
+      "evidence": ["collected within seven days"],
+      "answer": ["seven days"]
+    },
+    {
+      "q": "What happens if I lose my key card?",
+      "evidence": ["A lost card must be reported"],
+      "answer": ["reported", "£15"]
+    },
+    {
+      "q": "Can I play my guitar in my room?",
+      "evidence": ["Musical instruments may be played only in the practice room"],
+      "answer": ["practice room"]
+    },
+    {
+      "q": "What is the wifi password?",
+      "evidence": ["password is printed on the back of the key card holder"],
+      "answer": ["key card holder"]
+    },
+    {
+      "q": "Give me an overview of the handbook",
+      "evidence": ["This handbook explains how the buildings run"],
+      "answer": ["handbook"]
+    },
+    {
+      "q": "What is the parking permit fee?",
+      "expectInsufficient": true
+    }
+  ]
+}

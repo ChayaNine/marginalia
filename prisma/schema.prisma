@@ -1,0 +1,114 @@
+// Marginalia data model.
+//
+// Documents are split into Chunks; each Chunk stores its embedding vector as raw
+// Float32 bytes. QuestionSets hold Questions; each Question gets at most one Answer
+// (the AI draft plus the human's review decision) and each Answer has Citations
+// that point back at the exact Chunks it was grounded in.
+//
+// Status fields are plain strings validated by zod in src/lib/status.ts, because
+// this app targets SQLite and we want the schema to stay portable to Postgres
+// without a migration that rewrites enum columns.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Document {
+  id              String        @id @default(cuid())
+  title           String
+  filename        String
+  mimeType        String
+  sizeBytes       Int
+  sha256          String        @unique
+  status          String // PROCESSING | READY | FAILED
+  error           String?
+  charCount       Int           @default(0)
+  pageCount       Int? // for formats with pages (PDF)
+  embeddingModel  String // which model produced the chunk vectors (e.g. text-embedding-3-small, mock-hash-v1)
+  summary         String? // JSON: DocumentSummary (src/lib/rag/summary.ts)
+  pipelineVersion Int           @default(1) // bump PIPELINE_VERSION to mark old documents for re-processing
+  chunks          Chunk[]
+  file            DocumentFile?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+/// The original upload, kept so a citation can open the PDF at the cited page and
+/// a document can be re-processed when the pipeline improves. Separate table so
+/// listing documents never loads file bytes.
+model DocumentFile {
+  documentId String   @id
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  data       Bytes
+}
+
+model Chunk {
+  id         String     @id @default(cuid())
+  documentId String
+  document   Document   @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  index      Int // 0-based position inside the document
+  content    String
+  heading    String? // section path, e.g. "III. System Overview › C. Sensor Calibration"
+  pageStart  Int?
+  pageEnd    Int?
+  tokenCount Int // approximate (chars / 4)
+  embedding  Bytes // Float32Array serialised with src/lib/rag/vectors.ts
+  citations  Citation[]
+
+  @@unique([documentId, index])
+  @@index([documentId])
+}
+
+model QuestionSet {
+  id        String     @id @default(cuid())
+  name      String
+  questions Question[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Question {
+  id            String      @id @default(cuid())
+  questionSetId String
+  questionSet   QuestionSet @relation(fields: [questionSetId], references: [id], onDelete: Cascade)
+  index         Int // 0-based row number in the imported file
+  text          String
+  answer        Answer?
+
+  @@unique([questionSetId, index])
+  @@index([questionSetId])
+}
+
+model Answer {
+  id           String     @id @default(cuid())
+  questionId   String     @unique
+  question     Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  draft        String // what the model wrote
+  finalText    String? // what the human edited it to (null = unchanged)
+  confidence   String // high | medium | low
+  insufficient Boolean    @default(false) // model said the sources don't answer it
+  status       String // DRAFT | APPROVED | REJECTED
+  model        String // which chat model produced the draft
+  citations    Citation[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Citation {
+  id       String  @id @default(cuid())
+  answerId String
+  answer   Answer  @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  chunkId  String
+  chunk    Chunk   @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+  quote    String // verbatim snippet the model claims supports the answer
+  verified Boolean // true if `quote` really appears in chunk.content
+  order    Int // display order
+
+  @@index([answerId])
+  @@index([chunkId])
+}
