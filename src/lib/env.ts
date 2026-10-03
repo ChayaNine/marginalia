@@ -10,10 +10,21 @@ const emptyToUndefined = (v: unknown) => (typeof v === "string" && v.trim() === 
 
 export const DEFAULT_DATABASE_URL = "file:./dev.db";
 
+
 const envSchema = z.object({
-  DATABASE_URL: z.preprocess(emptyToUndefined, z.string().default(DEFAULT_DATABASE_URL)),
-  OPENAI_API_KEY: z.preprocess(emptyToUndefined, z.string().optional()),
-  // Any OpenAI-compatible server: Ollama, LM Studio, Groq, OpenRouter, Gemini…
+  DATABASE_URL: z.preprocess(
+    emptyToUndefined,
+    z.string().default(DEFAULT_DATABASE_URL),
+  ),
+  TURSO_DATABASE_URL: z.preprocess(
+    emptyToUndefined,
+    z.string().optional(),
+  ),
+  TURSO_AUTH_TOKEN: z.preprocess(
+    emptyToUndefined,
+    z.string().optional(),
+  ),
+  OPENAI_API_KEY: z.preprocess(emptyToUndefined, z.string().optional()),  // Any OpenAI-compatible server: Ollama, LM Studio, Groq, OpenRouter, Gemini…
   OPENAI_BASE_URL: z.preprocess(
     emptyToUndefined,
     z

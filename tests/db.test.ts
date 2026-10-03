@@ -1,9 +1,13 @@
 // Database behaviour we rely on but that could silently break: cascading deletes
 // through the SQLite driver adapter, and the embedding round-trip through Bytes.
 
-import { describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
 import { prisma } from "@/lib/db";
 import { bytesToVector, vectorToBytes } from "@/lib/rag/vectors";
+
+afterAll(async () => {
+  await prisma.$disconnect();
+});
 
 async function makeDocumentWithChunk(tag: string) {
   return prisma.document.create({

@@ -4,7 +4,7 @@
 
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
 import { POST as ask } from "@/app/api/ask/route";
 import { PATCH as patchAnswer } from "@/app/api/answers/[id]/route";
 import { DELETE as deleteDocument, GET as getDocument } from "@/app/api/documents/[id]/route";
@@ -19,6 +19,9 @@ import { GET as listSets, POST as createSet } from "@/app/api/question-sets/rout
 import { POST as draftQuestion } from "@/app/api/questions/[id]/draft/route";
 import { parseCsv } from "@/lib/csv";
 import { prisma } from "@/lib/db";
+afterAll(async () => {
+  await prisma.$disconnect();
+});
 import type {
   AnswerDTO,
   ChunkDTO,
@@ -28,6 +31,7 @@ import type {
 } from "@/lib/dto";
 import type { DraftBatchResult } from "@/lib/drafting";
 import type { AnswerResult } from "@/lib/rag/answer";
+
 
 const handbook = readFileSync(
   path.resolve(__dirname, "../prisma/seed-data/aurora-housing-handbook.md"),
